@@ -4,20 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { KeyRound } from "lucide-react";
+import { KeyRound, Info } from "lucide-react";
 import { useApiKey } from "@/hooks/useApiKey";
 
 const ApiSettings = () => {
   const [inputApiKey, setInputApiKey] = useState("");
-  const { apiKey, saveApiKey, clearApiKey } = useApiKey();
-  const [isCustomKey, setIsCustomKey] = useState(false);
+  const { apiKey, isCustomKey, saveApiKey, clearApiKey } = useApiKey();
 
   // Load API key from localStorage on component mount
   useEffect(() => {
     const savedApiKey = localStorage.getItem("finance_app_api_key");
     if (savedApiKey) {
       setInputApiKey(savedApiKey);
-      setIsCustomKey(true);
     }
   }, []);
 
@@ -28,13 +26,11 @@ const ApiSettings = () => {
     }
 
     saveApiKey(inputApiKey);
-    setIsCustomKey(true);
   };
 
   const handleClearApiKey = () => {
     clearApiKey();
     setInputApiKey("");
-    setIsCustomKey(false);
   };
 
   return (
@@ -46,19 +42,22 @@ const ApiSettings = () => {
         </CardTitle>
         <CardDescription>
           {isCustomKey 
-            ? "Update or remove your custom API key"
+            ? "Your custom API key is currently being used for all AI features"
             : "A default API key is provided, but you can use your own for better results"}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          <div className="flex items-start p-3 bg-blue-50 rounded-md text-blue-700">
+            <Info className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+            <div className="text-sm">
+              <p className="font-medium">Important:</p>
+              <p>The API key is used for all AI features: Scenarios, AI Advisor, and Finance Chat.</p>
+              <p className="mt-1">Current status: {isCustomKey ? "Using your custom API key" : "Using default API key"}</p>
+            </div>
+          </div>
+          
           <div className="space-y-2">
-            <p className="text-sm text-gray-600">
-              {isCustomKey 
-                ? "You are currently using your custom API key."
-                : "You are currently using the application's default API key. For more personalized responses, you can enter your own API key."}
-            </p>
-            
             <div className="space-y-2">
               <Input
                 type="password"
