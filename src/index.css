@@ -44,8 +44,11 @@
     @apply bg-finance-charcoal/70 backdrop-blur-lg border border-white/10 text-white shadow-lg;
   }
 
-  .transition-all {
-    @apply transition-all duration-300 ease-in-out;
+  /* Fixed circular dependency by using direct CSS properties instead of @apply */
+  .smooth-transition {
+    transition-property: all;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .text-balance {

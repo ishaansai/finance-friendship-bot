@@ -1,5 +1,5 @@
 
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -41,7 +41,7 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
                   value="tracker"
                   className={cn(
                     "data-[state=active]:bg-white data-[state=active]:text-finance-blue data-[state=active]:shadow-md",
-                    "transition-all duration-300"
+                    "smooth-transition"
                   )}
                 >
                   Expense Tracker
@@ -50,7 +50,7 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
                   value="advisor"
                   className={cn(
                     "data-[state=active]:bg-white data-[state=active]:text-finance-indigo data-[state=active]:shadow-md",
-                    "transition-all duration-300"
+                    "smooth-transition"
                   )}
                 >
                   AI Advisor
@@ -59,7 +59,7 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
                   value="chat"
                   className={cn(
                     "data-[state=active]:bg-white data-[state=active]:text-finance-teal data-[state=active]:shadow-md",
-                    "transition-all duration-300"
+                    "smooth-transition"
                   )}
                 >
                   Finance Chat
@@ -68,7 +68,7 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
                   value="scenarios"
                   className={cn(
                     "data-[state=active]:bg-white data-[state=active]:text-finance-charcoal data-[state=active]:shadow-md",
-                    "transition-all duration-300"
+                    "smooth-transition"
                   )}
                 >
                   Scenarios
