@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import TransitionComponent from "./TransitionComponent";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { navigateTo } from "@/utils/navigation";
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,7 +14,9 @@ interface LayoutProps {
   appName?: string;
 }
 
-const Layout = ({ children, activeTab, setActiveTab, appName = "FinanceSage" }: LayoutProps) => {
+const Layout = ({ children, activeTab, setActiveTab, appName = "WealthBridge" }: LayoutProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-finance-light to-white">
       <main className="container mx-auto px-4 py-8 max-w-6xl">
@@ -24,11 +27,14 @@ const Layout = ({ children, activeTab, setActiveTab, appName = "FinanceSage" }: 
           className="mb-10"
         >
           <div className="text-center mb-6">
-            <Link to="/" className="inline-block">
+            <div 
+              onClick={() => navigateTo.home(navigate)} 
+              className="inline-block cursor-pointer"
+            >
               <h1 className="text-4xl font-bold text-finance-charcoal tracking-tight mb-2">
                 {appName}
               </h1>
-            </Link>
+            </div>
             <p className="text-finance-gray max-w-xl mx-auto">
               Your personal guide to financial literacy and management
             </p>
