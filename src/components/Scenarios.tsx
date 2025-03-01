@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, RefreshCw, CheckCircle2, Lightbulb } from "lucide-react";
+import { toast } from "sonner";
+import { useApiKey } from "@/hooks/useApiKey";
 
 // Mock scenarios by category
 const scenarioCategories = [
@@ -108,6 +109,7 @@ const Scenarios = () => {
   const [userResponse, setUserResponse] = useState("");
   const [feedback, setFeedback] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(false);
+  const { apiKey, checkApiKey } = useApiKey();
 
   const selectCategory = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -117,6 +119,10 @@ const Scenarios = () => {
   };
 
   const generateScenario = (categoryId: string) => {
+    if (!checkApiKey()) {
+      return;
+    }
+    
     const scenarios = mockScenarios[categoryId];
     const randomIndex = Math.floor(Math.random() * scenarios.length);
     setCurrentScenario(scenarios[randomIndex]);
@@ -125,17 +131,52 @@ const Scenarios = () => {
   const handleSubmitResponse = () => {
     if (!userResponse.trim()) return;
     
+    if (!checkApiKey()) {
+      return;
+    }
+    
     setLoading(true);
     
-    // Simulate API call delay
-    setTimeout(() => {
-      // In a real app, this would be determined by the AI
-      const feedbackTypes = ["excellent", "good", "fair", "needs_improvement"];
-      const randomFeedback = mockFeedback[feedbackTypes[Math.floor(Math.random() * feedbackTypes.length)]];
+    try {
+      setTimeout(() => {
+        const feedbackTypes = ["excellent", "good", "fair", "needs_improvement"];
+        const randomFeedback = mockFeedback[feedbackTypes[Math.floor(Math.random() * feedbackTypes.length)]];
+        
+        setFeedback(randomFeedback);
+        setLoading(false);
+      }, 1500);
       
-      setFeedback(randomFeedback);
+      /*
+      const fetchFeedback = async () => {
+        const response = await fetch('https://api.example.com/scenario-feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            category: selectedCategory,
+            scenario: currentScenario,
+            userResponse: userResponse
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get feedback');
+        }
+
+        const data = await response.json();
+        setFeedback(data.feedback);
+        setLoading(false);
+      };
+
+      fetchFeedback();
+      */
+    } catch (error) {
+      console.error('Error getting feedback:', error);
+      toast.error("Failed to analyze response. Please try again.");
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const handleNewScenario = () => {
