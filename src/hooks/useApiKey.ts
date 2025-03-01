@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-// Replace this with your actual API key
-const DEFAULT_API_KEY = "YOUR_API_KEY_HERE"; 
+// Default API key that will be used if no custom key is provided
+const DEFAULT_API_KEY = "sk-demo-finance-app-key-2024"; 
 
 export const useApiKey = () => {
   const [apiKey, setApiKey] = useState<string>(DEFAULT_API_KEY);
