@@ -4,14 +4,16 @@ import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import TransitionComponent from "./TransitionComponent";
+import { Link } from "react-router-dom";
 
 interface LayoutProps {
   children: ReactNode;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  appName?: string;
 }
 
-const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
+const Layout = ({ children, activeTab, setActiveTab, appName = "FinanceSage" }: LayoutProps) => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-finance-light to-white">
       <main className="container mx-auto px-4 py-8 max-w-6xl">
@@ -22,9 +24,11 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
           className="mb-10"
         >
           <div className="text-center mb-6">
-            <h1 className="text-4xl font-bold text-finance-charcoal tracking-tight mb-2">
-              FinanceSage
-            </h1>
+            <Link to="/" className="inline-block">
+              <h1 className="text-4xl font-bold text-finance-charcoal tracking-tight mb-2">
+                {appName}
+              </h1>
+            </Link>
             <p className="text-finance-gray max-w-xl mx-auto">
               Your personal guide to financial literacy and management
             </p>
