@@ -1,0 +1,89 @@
+
+import { ReactNode, useState } from "react";
+import { motion } from "framer-motion";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import TransitionComponent from "./TransitionComponent";
+
+interface LayoutProps {
+  children: ReactNode;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
+  return (
+    <div className="min-h-screen w-full bg-gradient-to-br from-finance-light to-white">
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-10"
+        >
+          <div className="text-center mb-6">
+            <h1 className="text-4xl font-bold text-finance-charcoal tracking-tight mb-2">
+              FinanceSage
+            </h1>
+            <p className="text-finance-gray max-w-xl mx-auto">
+              Your personal guide to financial literacy and management
+            </p>
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full max-w-2xl"
+            >
+              <TabsList className="grid grid-cols-4 w-full">
+                <TabsTrigger
+                  value="tracker"
+                  className={cn(
+                    "data-[state=active]:bg-white data-[state=active]:text-finance-blue data-[state=active]:shadow-md",
+                    "transition-all duration-300"
+                  )}
+                >
+                  Expense Tracker
+                </TabsTrigger>
+                <TabsTrigger
+                  value="advisor"
+                  className={cn(
+                    "data-[state=active]:bg-white data-[state=active]:text-finance-indigo data-[state=active]:shadow-md",
+                    "transition-all duration-300"
+                  )}
+                >
+                  AI Advisor
+                </TabsTrigger>
+                <TabsTrigger
+                  value="chat"
+                  className={cn(
+                    "data-[state=active]:bg-white data-[state=active]:text-finance-teal data-[state=active]:shadow-md",
+                    "transition-all duration-300"
+                  )}
+                >
+                  Finance Chat
+                </TabsTrigger>
+                <TabsTrigger
+                  value="scenarios"
+                  className={cn(
+                    "data-[state=active]:bg-white data-[state=active]:text-finance-charcoal data-[state=active]:shadow-md",
+                    "transition-all duration-300"
+                  )}
+                >
+                  Scenarios
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        </motion.div>
+
+        <TransitionComponent>
+          {children}
+        </TransitionComponent>
+      </main>
+    </div>
+  );
+};
+
+export default Layout;

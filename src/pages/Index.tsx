@@ -1,13 +1,39 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from "react";
+import Layout from "@/components/Layout";
+import ExpenseTracker from "@/components/ExpenseTracker";
+import AIAdvisor from "@/components/AIAdvisor";
+import FinanceChat from "@/components/FinanceChat";
+import Scenarios from "@/components/Scenarios";
+import { FinanceProvider, useFinance } from "@/context/FinanceContext";
+import { Transaction } from "@/components/ExpenseTracker";
+import { toast } from "sonner";
+
+// Add framer-motion for animations
+<lov-add-dependency>framer-motion@10.18.0</lov-add-dependency>
+
+const TabContent = ({ activeTab }: { activeTab: string }) => {
+  const { transactions } = useFinance();
+
+  return (
+    <>
+      {activeTab === "tracker" && <ExpenseTracker />}
+      {activeTab === "advisor" && <AIAdvisor transactions={transactions} />}
+      {activeTab === "chat" && <FinanceChat />}
+      {activeTab === "scenarios" && <Scenarios />}
+    </>
+  );
+};
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState("tracker");
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <FinanceProvider>
+      <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+        <TabContent activeTab={activeTab} />
+      </Layout>
+    </FinanceProvider>
   );
 };
 
