@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-// Default API key that will be used if no user-provided key exists
-// You can replace this with your actual default API key
-const DEFAULT_API_KEY = "sk-demo-finance-app-key-2024"; 
+// Replace this with your actual API key
+const DEFAULT_API_KEY = "your-api-key-goes-here"; 
 
 export const useApiKey = () => {
   const [apiKey, setApiKey] = useState<string>(DEFAULT_API_KEY);
