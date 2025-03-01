@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { PlusCircle, MinusCircle, DollarSign, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import ExpenseChart from "./charts/ExpenseChart";

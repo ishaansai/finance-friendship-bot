@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Lightbulb } from "lucide-react";
 import { Transaction } from "./ExpenseTracker";

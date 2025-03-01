@@ -9,9 +9,6 @@ import { FinanceProvider, useFinance } from "@/context/FinanceContext";
 import { Transaction } from "@/components/ExpenseTracker";
 import { toast } from "sonner";
 
-// Add framer-motion for animations
-<lov-add-dependency>framer-motion@10.18.0</lov-add-dependency>
-
 const TabContent = ({ activeTab }: { activeTab: string }) => {
   const { transactions } = useFinance();
 
