@@ -36,7 +36,7 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
               onValueChange={setActiveTab}
               className="w-full max-w-2xl"
             >
-              <TabsList className="grid grid-cols-4 w-full">
+              <TabsList className="grid grid-cols-5 w-full">
                 <TabsTrigger
                   value="tracker"
                   className={cn(
@@ -72,6 +72,15 @@ const Layout = ({ children, activeTab, setActiveTab }: LayoutProps) => {
                   )}
                 >
                   Scenarios
+                </TabsTrigger>
+                <TabsTrigger
+                  value="settings"
+                  className={cn(
+                    "data-[state=active]:bg-white data-[state=active]:text-finance-purple data-[state=active]:shadow-md",
+                    "smooth-transition"
+                  )}
+                >
+                  API Settings
                 </TabsTrigger>
               </TabsList>
             </Tabs>
