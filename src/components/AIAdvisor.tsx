@@ -1,6 +1,5 @@
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -17,10 +16,15 @@ const AIAdvisor = ({ transactions }: AIAdvisorProps) => {
   const [loading, setLoading] = useState(false);
   const { apiKey, checkApiKey } = useApiKey();
 
+  // Generate advice automatically when component mounts or transactions change
+  useEffect(() => {
+    generateAdvice();
+  }, [transactions]);
+
   const generateAdvice = async () => {
     // Check if there are enough transactions to generate meaningful advice
     if (transactions.length < 3) {
-      toast.error("Please add more transactions to get personalized advice");
+      setAdvice("");
       return;
     }
 
@@ -122,7 +126,7 @@ const AIAdvisor = ({ transactions }: AIAdvisorProps) => {
           Financial Advisor
         </CardTitle>
         <CardDescription>
-          Get personalized financial advice based on your transactions
+          Personalized financial advice based on your transactions
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -133,31 +137,21 @@ const AIAdvisor = ({ transactions }: AIAdvisorProps) => {
                 Add at least 3 transactions in the Expense Tracker to get personalized advice
               </p>
             </div>
+          ) : loading ? (
+            <div className="text-center p-6">
+              <span className="loader mr-2"></span>
+              <p className="text-finance-gray mt-2">Analyzing your finances...</p>
+            </div>
           ) : (
-            <Button 
-              onClick={generateAdvice} 
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span className="loader mr-2"></span>
-                  Analyzing your finances...
-                </>
-              ) : (
-                "Generate Advice"
-              )}
-            </Button>
-          )}
-
-          {advice && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 p-4 bg-finance-blue/5 rounded-lg"
-            >
-              <p className="text-finance-charcoal leading-relaxed">{advice}</p>
-            </motion.div>
+            advice && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-finance-blue/5 rounded-lg"
+              >
+                <p className="text-finance-charcoal leading-relaxed">{advice}</p>
+              </motion.div>
+            )
           )}
         </div>
       </CardContent>

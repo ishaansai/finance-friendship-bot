@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { Transaction } from "@/components/ExpenseTracker";
 
 interface FinanceContextType {
@@ -22,6 +22,19 @@ interface FinanceProviderProps {
 
 export const FinanceProvider = ({ children }: FinanceProviderProps) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  // Load transactions from localStorage on initial render
+  useEffect(() => {
+    const savedTransactions = localStorage.getItem("finance_transactions");
+    if (savedTransactions) {
+      setTransactions(JSON.parse(savedTransactions));
+    }
+  }, []);
+
+  // Save transactions to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("finance_transactions", JSON.stringify(transactions));
+  }, [transactions]);
 
   const addTransaction = (transaction: Omit<Transaction, "id" | "date">) => {
     const newTransaction: Transaction = {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +10,7 @@ import { PlusCircle, MinusCircle, DollarSign, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import ExpenseChart from "./charts/ExpenseChart";
 import { formatCurrency } from "@/utils/financeUtils";
+import { useFinance } from "@/context/FinanceContext";
 
 export interface Transaction {
   id: string;
@@ -32,7 +32,7 @@ const ExpenseTracker = () => {
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<"income" | "expense">("expense");
   const [category, setCategory] = useState("Other");
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const { transactions, addTransaction, deleteTransaction } = useFinance();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,16 +42,13 @@ const ExpenseTracker = () => {
       return;
     }
 
-    const newTransaction: Transaction = {
-      id: Date.now().toString(),
+    addTransaction({
       description,
       amount: Number(amount),
       type,
       category,
-      date: new Date().toISOString(),
-    };
+    });
 
-    setTransactions([newTransaction, ...transactions]);
     setDescription("");
     setAmount("");
     
@@ -59,7 +56,7 @@ const ExpenseTracker = () => {
   };
 
   const handleDelete = (id: string) => {
-    setTransactions(transactions.filter((transaction) => transaction.id !== id));
+    deleteTransaction(id);
     toast.success("Transaction deleted");
   };
 
