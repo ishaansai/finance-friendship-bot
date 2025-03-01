@@ -5,37 +5,36 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { KeyRound } from "lucide-react";
+import { useApiKey } from "@/hooks/useApiKey";
 
 const ApiSettings = () => {
-  const [apiKey, setApiKey] = useState("");
-  const [isSaved, setIsSaved] = useState(false);
+  const [inputApiKey, setInputApiKey] = useState("");
+  const { apiKey, saveApiKey, clearApiKey } = useApiKey();
+  const [isCustomKey, setIsCustomKey] = useState(false);
 
   // Load API key from localStorage on component mount
   useEffect(() => {
     const savedApiKey = localStorage.getItem("finance_app_api_key");
     if (savedApiKey) {
-      setApiKey(savedApiKey);
-      setIsSaved(true);
+      setInputApiKey(savedApiKey);
+      setIsCustomKey(true);
     }
   }, []);
 
   const handleSaveApiKey = () => {
-    if (!apiKey.trim()) {
+    if (!inputApiKey.trim()) {
       toast.error("Please enter a valid API key");
       return;
     }
 
-    // Save API key to localStorage
-    localStorage.setItem("finance_app_api_key", apiKey);
-    setIsSaved(true);
-    toast.success("API key saved successfully");
+    saveApiKey(inputApiKey);
+    setIsCustomKey(true);
   };
 
   const handleClearApiKey = () => {
-    localStorage.removeItem("finance_app_api_key");
-    setApiKey("");
-    setIsSaved(false);
-    toast.success("API key removed");
+    clearApiKey();
+    setInputApiKey("");
+    setIsCustomKey(false);
   };
 
   return (
@@ -46,41 +45,42 @@ const ApiSettings = () => {
           API Settings
         </CardTitle>
         <CardDescription>
-          Enter your API key to enable AI features across the application
+          {isCustomKey 
+            ? "Update or remove your custom API key"
+            : "A default API key is provided, but you can use your own for better results"}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="space-y-2">
             <p className="text-sm text-gray-600">
-              To use AI features (Advisor, Chat, Scenarios), you need to provide an API key. 
-              This key will be stored locally on your device and not sent to our servers.
+              {isCustomKey 
+                ? "You are currently using your custom API key."
+                : "You are currently using the application's default API key. For more personalized responses, you can enter your own API key."}
             </p>
             
             <div className="space-y-2">
               <Input
                 type="password"
                 placeholder="Enter your API key"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                value={inputApiKey}
+                onChange={(e) => setInputApiKey(e.target.value)}
               />
               <div className="flex gap-2">
                 <Button onClick={handleSaveApiKey} className="w-full">
                   Save API Key
                 </Button>
-                {isSaved && (
+                {isCustomKey && (
                   <Button onClick={handleClearApiKey} variant="outline" className="w-full">
-                    Clear API Key
+                    Use Default Key
                   </Button>
                 )}
               </div>
             </div>
             
-            {isSaved && (
-              <p className="text-sm text-green-600 mt-2">
-                ✓ API key saved - AI features are enabled
-              </p>
-            )}
+            <p className="text-sm text-green-600 mt-2">
+              ✓ AI features are enabled {isCustomKey ? "with your custom key" : "with the default key"}
+            </p>
           </div>
         </div>
       </CardContent>

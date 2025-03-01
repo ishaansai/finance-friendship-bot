@@ -15,17 +15,46 @@ export const getScenarioFeedback = (
 ): Promise<FeedbackItem> => {
   return new Promise((resolve, reject) => {
     if (!apiKey) {
-      toast.error("Please add your API key in Settings to use this feature");
+      toast.error("No API key available");
       reject(new Error("No API key provided"));
       return;
     }
 
-    // Simulate API call
+    // Analyze the user's response content to provide more targeted feedback
+    // This is a simplified analysis for demonstration
+    const responseWords = response.toLowerCase().split(/\s+/);
+    
+    // Check for keywords that might indicate good financial thinking
+    const positiveKeywords = ['emergency', 'fund', 'budget', 'save', 'invest', 'prioritize', 'needs', 'long-term'];
+    const negativeKeywords = ['spend', 'loan', 'borrow', 'credit', 'immediately', 'buy'];
+    
+    let positiveScore = 0;
+    let negativeScore = 0;
+    
+    responseWords.forEach(word => {
+      if (positiveKeywords.includes(word)) positiveScore++;
+      if (negativeKeywords.includes(word)) negativeScore++;
+    });
+    
+    // Calculate a simple score based on positive vs negative financial concepts
+    const score = positiveScore - negativeScore;
+    
+    // Determine feedback type based on score
+    let feedbackType: string;
+    
+    if (score >= 3) {
+      feedbackType = "excellent";
+    } else if (score >= 1) {
+      feedbackType = "good";
+    } else if (score >= 0) {
+      feedbackType = "fair";
+    } else {
+      feedbackType = "needs_improvement";
+    }
+    
+    // Return the appropriate feedback
     setTimeout(() => {
-      const feedbackTypes = ["excellent", "good", "fair", "needs_improvement"];
-      const randomFeedback = mockFeedback[feedbackTypes[Math.floor(Math.random() * feedbackTypes.length)]];
-      
-      resolve(randomFeedback);
+      resolve(mockFeedback[feedbackType]);
     }, 1500);
     
     /* 
