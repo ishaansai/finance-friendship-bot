@@ -1,37 +1,10 @@
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-import { KeyRound, Info } from "lucide-react";
+import { KeyRound, Info, CheckCircle2 } from "lucide-react";
 import { useApiKey } from "@/hooks/useApiKey";
 
 const ApiSettings = () => {
-  const [inputApiKey, setInputApiKey] = useState("");
-  const { apiKey, isCustomKey, saveApiKey, clearApiKey } = useApiKey();
-
-  // Load API key from localStorage on component mount
-  useEffect(() => {
-    const savedApiKey = localStorage.getItem("finance_app_api_key");
-    if (savedApiKey) {
-      setInputApiKey(savedApiKey);
-    }
-  }, []);
-
-  const handleSaveApiKey = () => {
-    if (!inputApiKey.trim()) {
-      toast.error("Please enter a valid API key");
-      return;
-    }
-
-    saveApiKey(inputApiKey);
-  };
-
-  const handleClearApiKey = () => {
-    clearApiKey();
-    setInputApiKey("");
-  };
+  const { apiKey } = useApiKey();
 
   return (
     <Card className="glass">
@@ -41,44 +14,32 @@ const ApiSettings = () => {
           API Settings
         </CardTitle>
         <CardDescription>
-          {isCustomKey 
-            ? "Your custom API key is currently being used for all AI features"
-            : "A default API key is provided, but you can use your own for better results"}
+          API key is pre-configured and ready to use
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="flex items-start p-3 bg-blue-50 rounded-md text-blue-700">
-            <Info className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+          <div className="flex items-start p-3 bg-green-50 rounded-md text-green-700">
+            <CheckCircle2 className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
             <div className="text-sm">
-              <p className="font-medium">Important:</p>
-              <p>The API key is used for all AI features: Scenarios, AI Advisor, and Finance Chat.</p>
-              <p className="mt-1">Current status: {isCustomKey ? "Using your custom API key" : "Using default API key"}</p>
+              <p className="font-medium">API Key Status: Active</p>
+              <p>All AI features are enabled and ready to use. The API key has been pre-configured by the application owner.</p>
+              <p className="mt-1">You don't need to provide your own API key.</p>
             </div>
           </div>
           
           <div className="space-y-2">
-            <div className="space-y-2">
-              <Input
-                type="password"
-                placeholder="Enter your API key"
-                value={inputApiKey}
-                onChange={(e) => setInputApiKey(e.target.value)}
-              />
-              <div className="flex gap-2">
-                <Button onClick={handleSaveApiKey} className="w-full">
-                  Save API Key
-                </Button>
-                {isCustomKey && (
-                  <Button onClick={handleClearApiKey} variant="outline" className="w-full">
-                    Use Default Key
-                  </Button>
-                )}
-              </div>
+            <div className="p-3 bg-blue-50 rounded-md text-blue-700">
+              <Info className="h-5 w-5 mr-2 inline-block" />
+              <span className="text-sm font-medium">Important Note:</span>
+              <p className="text-sm mt-1">
+                This application uses a shared API key for all users. The key is managed by the application owner 
+                and you do not need to make any changes here.
+              </p>
             </div>
             
-            <p className="text-sm text-green-600 mt-2">
-              ✓ AI features are enabled {isCustomKey ? "with your custom key" : "with the default key"}
+            <p className="text-sm text-green-600 mt-2 text-center">
+              ✓ All AI features are enabled and working
             </p>
           </div>
         </div>
