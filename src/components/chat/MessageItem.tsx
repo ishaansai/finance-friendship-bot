@@ -6,9 +6,10 @@ interface MessageProps {
   text: string;
   sender: "user" | "ai";
   timestamp: Date;
+  status?: "sending" | "sent" | "error";
 }
 
-const MessageItem = ({ id, text, sender, timestamp }: MessageProps) => {
+const MessageItem = ({ id, text, sender, timestamp, status }: MessageProps) => {
   return (
     <motion.div
       key={id}
@@ -24,15 +25,23 @@ const MessageItem = ({ id, text, sender, timestamp }: MessageProps) => {
           sender === "user"
             ? "bg-finance-blue text-white"
             : "bg-gray-100 text-finance-charcoal"
-        }`}
+        } ${status === "error" ? "border-2 border-red-500" : ""}`}
       >
         <p className="text-sm">{text}</p>
-        <p className="text-xs opacity-70 mt-1 text-right">
-          {timestamp.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </p>
+        <div className="flex justify-end items-center mt-1">
+          {status === "sending" && (
+            <span className="text-xs mr-2 opacity-70">Sending...</span>
+          )}
+          {status === "error" && (
+            <span className="text-xs mr-2 text-red-500">Failed to send</span>
+          )}
+          <p className="text-xs opacity-70 text-right">
+            {timestamp.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+        </div>
       </div>
     </motion.div>
   );

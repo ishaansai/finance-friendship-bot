@@ -10,6 +10,7 @@ interface Message {
   text: string;
   sender: "user" | "ai";
   timestamp: Date;
+  status?: "sending" | "sent" | "error";
 }
 
 interface MessageListProps {
@@ -22,7 +23,7 @@ const MessageList = ({ messages, isTyping }: MessageListProps) => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isTyping]);
 
   return (
     <ScrollArea className="flex-grow mb-4 pr-4">
@@ -35,6 +36,7 @@ const MessageList = ({ messages, isTyping }: MessageListProps) => {
               text={message.text}
               sender={message.sender}
               timestamp={message.timestamp}
+              status={message.status}
             />
           ))}
         </AnimatePresence>
