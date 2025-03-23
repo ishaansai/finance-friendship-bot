@@ -22,186 +22,99 @@ export const getScenarioFeedback = (
 
     console.log(`Using API key: ${apiKey.substring(0, 5)}... for scenario analysis`);
     
-    // Analyze the user's response to provide detailed, educational feedback
-    // In a real app, this would be done by the AI API
-    const responseWords = response.toLowerCase().split(/\s+/);
+    // In a real implementation, we would call the AI API here
+    // For now, let's simulate a more sophisticated analysis
     
-    // Enhanced keyword analysis system for deeper financial knowledge assessment
-    const keywordCategories = {
-      emergencyFund: ["emergency", "fund", "safety", "net", "unexpected", "rainy", "day", "buffer"],
-      budgeting: ["budget", "track", "planning", "allocate", "needs", "wants", "spending", "plan"],
-      debtManagement: ["debt", "interest", "principal", "avalanche", "snowball", "minimum", "payment", "consolidation"],
-      investing: ["invest", "stock", "bond", "mutual", "fund", "index", "etf", "diversify", "portfolio", "risk"],
-      retirement: ["retire", "401k", "ira", "roth", "pension", "compound", "interest", "social", "security"],
-      taxStrategy: ["tax", "deduction", "credit", "defer", "bracket", "capital", "gain", "loss"],
-      insurance: ["insure", "policy", "premium", "coverage", "risk", "liability", "term", "whole", "life"],
-      estateWill: ["estate", "will", "trust", "beneficiary", "inheritance", "probate", "power", "attorney"]
+    // Extract key financial concepts and themes from the response
+    const responseText = response.toLowerCase();
+    
+    // Analyze for specific financial concepts
+    const emergencyFundMentioned = responseText.includes("emergency fund") || responseText.includes("emergency savings");
+    const debtStrategyMentioned = responseText.includes("high interest") || responseText.includes("debt snowball") || responseText.includes("debt avalanche");
+    const budgetingMentioned = responseText.includes("budget") || responseText.includes("tracking expenses");
+    const investmentMentioned = responseText.includes("invest") || responseText.includes("stock") || responseText.includes("401k");
+    const needsVsWantsMentioned = responseText.includes("needs vs wants") || responseText.includes("necessities") || responseText.includes("priorities");
+    const savingMentioned = responseText.includes("save") || responseText.includes("saving");
+    
+    // Calculate a score based on financial literacy concepts
+    let score = 0;
+    let feedbackPoints = [];
+    let advicePoints = [];
+    
+    if (emergencyFundMentioned) {
+      score += 3;
+      feedbackPoints.push("You correctly emphasized the importance of emergency savings");
+    } else {
+      advicePoints.push("Consider building an emergency fund of 3-6 months of expenses before other financial goals");
+    }
+    
+    if (debtStrategyMentioned) {
+      score += 3;
+      feedbackPoints.push("Your strategic approach to debt management shows financial acumen");
+    } else {
+      advicePoints.push("Prioritize high-interest debt using either the snowball (psychological wins) or avalanche (mathematical efficiency) method");
+    }
+    
+    if (budgetingMentioned) {
+      score += 2;
+      feedbackPoints.push("Your mention of budgeting demonstrates foundational financial understanding");
+    } else {
+      advicePoints.push("Track your expenses and create a budget as the foundation of financial success");
+    }
+    
+    if (needsVsWantsMentioned) {
+      score += 2;
+      feedbackPoints.push("Distinguishing between needs and wants shows practical financial wisdom");
+    } else {
+      advicePoints.push("Differentiate between needs and wants in your spending decisions");
+    }
+    
+    if (savingMentioned) {
+      score += 2;
+      feedbackPoints.push("Your focus on saving is essential for financial stability");
+    }
+    
+    if (investmentMentioned && score < 7) {
+      advicePoints.push("Focus on emergency savings and debt before advancing to complex investments");
+    } else if (investmentMentioned) {
+      score += 2;
+      feedbackPoints.push("Your forward-thinking about investments shows advanced financial planning");
+    }
+    
+    // Analyze response comprehensiveness and depth
+    const wordCount = response.split(' ').length;
+    if (wordCount > 100) score += 2;
+    if (wordCount > 200) score += 1;
+    
+    // Generate personalized feedback
+    let feedback = "";
+    let advice = "";
+    
+    if (score >= 10) {
+      feedback = "Excellent financial reasoning! " + feedbackPoints.join(". ") + ".";
+      advice = "To further enhance your financial strategy: " + (advicePoints.length > 0 ? advicePoints.join(". ") : "Consider exploring tax-advantaged investment vehicles and asset allocation strategies based on your time horizon.");
+    } else if (score >= 7) {
+      feedback = "Good financial thinking! " + feedbackPoints.join(". ") + ".";
+      advice = "To improve your approach: " + advicePoints.join(". ") + ".";
+    } else if (score >= 4) {
+      feedback = "You're on the right track with some good financial concepts. " + (feedbackPoints.length > 0 ? feedbackPoints.join(". ") + "." : "");
+      advice = "Focus on these fundamental principles: " + advicePoints.join(". ") + ".";
+    } else {
+      feedback = "There's room for improvement in your financial approach.";
+      advice = "Start with these financial basics: build an emergency fund of 3-6 months of expenses, create and follow a budget, distinguish between needs and wants, and tackle high-interest debt. These fundamentals will set you up for financial success.";
+    }
+
+    console.log(`Analysis scores: Knowledge=${score}, Total=${score}`);
+    
+    // Create custom feedback based on the analysis
+    let customFeedback: FeedbackItem = {
+      feedback: feedback,
+      advice: advice
     };
     
-    // Comprehensive scoring system for financial knowledge
-    const categoryScores: Record<string, number> = {};
-    
-    // Initialize scores
-    Object.keys(keywordCategories).forEach(category => {
-      categoryScores[category] = 0;
-    });
-    
-    // Score each category based on keywords
-    responseWords.forEach(word => {
-      Object.entries(keywordCategories).forEach(([category, keywords]) => {
-        if (keywords.includes(word)) {
-          categoryScores[category] += 1;
-        }
-      });
-    });
-    
-    // Check for financial concepts in response
-    const financialConcepts = [
-      { text: "emergency fund", category: "emergencyFund", score: 5 },
-      { text: "three to six months", category: "emergencyFund", score: 3 },
-      { text: "high-yield savings", category: "emergencyFund", score: 3 },
-      { text: "debt to income ratio", category: "debtManagement", score: 4 },
-      { text: "avalanche method", category: "debtManagement", score: 4 },
-      { text: "snowball method", category: "debtManagement", score: 4 },
-      { text: "compound interest", category: "investing", score: 4 },
-      { text: "dollar cost averaging", category: "investing", score: 5 },
-      { text: "diversification", category: "investing", score: 4 },
-      { text: "asset allocation", category: "investing", score: 5 },
-      { text: "tax-advantaged", category: "taxStrategy", score: 4 },
-      { text: "capital gains", category: "taxStrategy", score: 3 },
-      { text: "employer match", category: "retirement", score: 3 },
-      { text: "roth conversion", category: "retirement", score: 5 },
-      { text: "50/30/20 rule", category: "budgeting", score: 4 },
-      { text: "zero-based budget", category: "budgeting", score: 4 },
-      { text: "envelope system", category: "budgeting", score: 3 },
-      { text: "term life insurance", category: "insurance", score: 3 },
-      { text: "disability insurance", category: "insurance", score: 3 },
-      { text: "living will", category: "estateWill", score: 3 },
-    ];
-    
-    // Add scores for financial concepts
-    financialConcepts.forEach(concept => {
-      if (response.toLowerCase().includes(concept.text)) {
-        categoryScores[concept.category] += concept.score;
-      }
-    });
-    
-    // Check for misunderstandings or misconceptions
-    const misconceptions = [
-      { text: "guaranteed return", penalty: 3 },
-      { text: "get rich quick", penalty: 4 },
-      { text: "timing the market", penalty: 3 },
-      { text: "all debt is bad", penalty: 2 },
-      { text: "i don't need insurance", penalty: 3 },
-      { text: "social security will be enough", penalty: 3 },
-      { text: "payday loan", penalty: 3 },
-      { text: "cash advance", penalty: 2 },
-    ];
-    
-    let misconceptionPenalty = 0;
-    misconceptions.forEach(item => {
-      if (response.toLowerCase().includes(item.text)) {
-        misconceptionPenalty += item.penalty;
-      }
-    });
-    
-    // Calculate overall financial knowledge score
-    const knowledgeScore = Object.values(categoryScores).reduce((sum, score) => sum + score, 0) - misconceptionPenalty;
-    
-    // Factor in response depth and clarity
-    let complexityBonus = 0;
-    if (response.length > 300) complexityBonus += 2;
-    if (response.length > 500) complexityBonus += 3;
-    
-    // Look for structured thinking (paragraphs, numbered points, etc.)
-    if (/\d\.\s/.test(response) || response.includes("\n\n")) {
-      complexityBonus += 2;
-    }
-    
-    // Calculate comprehensive score
-    const totalScore = knowledgeScore + complexityBonus;
-    console.log(`Analysis scores: Knowledge=${knowledgeScore}, Complexity=${complexityBonus}, Total=${totalScore}`);
-    
-    // Determine feedback type based on comprehensive analysis
-    let feedbackType: string;
-    
-    if (totalScore >= 15) {
-      feedbackType = "excellent";
-    } else if (totalScore >= 8) {
-      feedbackType = "good";
-    } else if (totalScore >= 3) {
-      feedbackType = "fair";
-    } else {
-      feedbackType = "needs_improvement";
-    }
-    
-    console.log(`Selected feedback type: ${feedbackType}`);
-    
-    // Generate personalized feedback and educational guidance
-    // In a real app, this would be generated by an AI API call
+    // In a real app, we would use the API key to call the API here
     setTimeout(() => {
-      // Create custom feedback based on the analysis
-      let customFeedback: FeedbackItem = {
-        feedback: "",
-        advice: ""
-      };
-      
-      // Base feedback on template but with personalization
-      const baseFeedback = mockFeedback[feedbackType];
-      
-      // Personalize feedback based on analysis
-      switch (feedbackType) {
-        case "excellent":
-          customFeedback.feedback = `${baseFeedback.feedback} I'm impressed by your understanding of ${Object.entries(categoryScores).sort((a, b) => b[1] - a[1])[0][0]} concepts.`;
-          customFeedback.advice = `${baseFeedback.advice} To further enhance your knowledge, consider exploring more advanced topics in ${Object.entries(categoryScores).sort((a, b) => a[1] - b[1])[0][0]}.`;
-          break;
-          
-        case "good":
-          customFeedback.feedback = `${baseFeedback.feedback} Your grasp of ${Object.entries(categoryScores).sort((a, b) => b[1] - a[1])[0][0]} principles is particularly strong.`;
-          customFeedback.advice = `${baseFeedback.advice} To improve further, I recommend learning more about ${Object.entries(categoryScores).sort((a, b) => a[1] - b[1])[0][0]} concepts.`;
-          break;
-          
-        case "fair":
-          customFeedback.feedback = `${baseFeedback.feedback} You have some understanding of basic financial concepts.`;
-          customFeedback.advice = `${baseFeedback.advice} Focus on strengthening your knowledge of ${Object.entries(categoryScores).sort((a, b) => a[1] - b[1])[0][0]} and ${Object.entries(categoryScores).sort((a, b) => a[1] - b[1])[1][0]}, which are foundational for financial success.`;
-          break;
-          
-        case "needs_improvement":
-          customFeedback.feedback = `${baseFeedback.feedback} Financial concepts can be complex, but understanding them is crucial for your financial well-being.`;
-          customFeedback.advice = `${baseFeedback.advice} I recommend starting with the basics of budgeting and emergency funds. Consider resources like "Personal Finance for Dummies" or free courses from Khan Academy.`;
-          break;
-      }
-      
-      // Add educational tips based on misconceptions if detected
-      if (misconceptionPenalty > 0) {
-        customFeedback.advice += " Be careful about common financial misconceptions. Remember that sustainable wealth building is typically a gradual process based on consistent principles, not quick schemes.";
-      }
-      
       resolve(customFeedback);
     }, 1500);
-    
-    /* Real API implementation would look like this:
-    fetch('https://api.example.com/scenario-feedback', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        userResponse: response,
-        analysisType: 'financial_education',
-        detailed: true,
-        returnPersonalizedAdvice: true
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to get feedback');
-      }
-      return response.json();
-    })
-    .then(data => resolve(data.feedback))
-    .catch(error => reject(error));
-    */
   });
 };
