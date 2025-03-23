@@ -1,4 +1,4 @@
-
+//tailwind.configg(typescript)
 import type { Config } from "tailwindcss";
 
 export default {
